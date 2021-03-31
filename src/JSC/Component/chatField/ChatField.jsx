@@ -48,7 +48,7 @@ function ChatField({backgroundColor,height,...props}) {
     useEffect(() => {
         chatPushText(chatList, setChatList);
     }, []);
-
+    chatPushText(chatList, setChatList);
     return (
         <TextField  className="textField" >
             {/*{chatList.map((i) => i.nickname === myNickName ? <MyText key={i.chatTime.toString()} chat={i}/> :*/}

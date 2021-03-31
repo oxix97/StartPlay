@@ -75,17 +75,31 @@ const makeSendMediaButton = (mediaBtn) => {
     )
 };
 
+const InputMessageChangeHandler=(e)=>{
+    set
+}
+
 const fieldSetBtnHandler = () =>{ // 텍스트가 들어있으면 버튼이 활성화 핸들러
 
 };
 
-function MyTextInput() {
+function MyTextInput({chatList,...props}) {
+    const [inputMessage,setInputMessage] = useState("");
+
+    const InputMessageChangeHandler=(e)=>{
+        setInputMessage(e.target.value)
+    }
+
+    const fieldSetButtonHandler = () =>{ // 텍스트가 들어있으면 버튼이 활성화 핸들러
+        
+    };
+
     return (
         <SendChat className="sendChat">
             <form className="sendForm"  name="chat"  onSubmit={fieldSetBtnHandler}>
                 <FieldSet className="fieldSet">
-                    <FieldInput className="fieldInput"/>
-                    <FieldSetBtn type='submit' className="fieldSetBtn">전송</FieldSetBtn>
+                    <FieldInput value={inputMessage} onChange={InputMessageChangeHandler} className="fieldInput"/>
+                    <FieldSetBtn onClick={fieldSetButtonHandler} type='submit' className="fieldSetBtn">전송</FieldSetBtn>
                 </FieldSet>
                 <div>
                     {makeSendMediaButton(sendMediaButtonList)}
