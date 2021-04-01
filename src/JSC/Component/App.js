@@ -1,6 +1,4 @@
-import Nav from './nav/Nav.jsx'
 import ChatField from './chatField/ChatField'
-import MyTextInput from './chatField/MyTextInput'
 import React from "react";
 import styled, {createGlobalStyle} from "styled-components";
 import reset from "styled-reset";
@@ -24,9 +22,7 @@ const GlobalStyles = createGlobalStyle`
      }
  `;
 const Chat = styled.div`
-  height:1000px;
-  width:600px;
-  background-color: white;
+
 `;
 const Main = styled.div`
   width:100%;
@@ -39,20 +35,8 @@ function App() {
     return (
         <>
             <GlobalStyles image={thunderstorm}/>
-            <Main >
-                <div>
-                    <div>
-
-                    </div>
-                    <div>
-
-                    </div>
-                </div>
-                <Chat>
-                    <Nav/>
-                    <ChatField />
-                    <MyTextInput/>
-                </Chat>
+            <Main>
+                <ChatField/>
             </Main>
         </>
     );

@@ -1,9 +1,8 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from "styled-components";
 import emoticon from "../../icon/emoticon.svg";
 import paperclip from "../../icon/paperclip.svg";
 import voicetalk from "../../icon/voicetalk.svg";
-import calendar from "../../icon/calendar.svg";
 
 
 const Img = styled.img`
@@ -38,7 +37,7 @@ const FieldSetBtn = styled.button`
     height:25px;
     overflow:hidden;
     // background-color:rgb(255, 235, 51); // 카카오톡 버튼 색
-    background-color: rgb(208,208,208);
+    background-color: ${props => props.disabled === false ? "rgb(208,208,208)" : "rgb(150,150,150)"}
     color:white;
     border:none;
     border-radius: 30px;
@@ -59,6 +58,7 @@ const SendMenuButton = styled.button`
     outline:0;
     background-color: white;
     cursor: pointer;
+    width:20%;
 `;
 
 
@@ -67,7 +67,7 @@ const makeSendMediaButton = (mediaBtn) => {
     return (
         <SendMenuButtons className="sendMenuBtn">
             {
-                mediaBtn.map((i,index) =>
+                mediaBtn.map((i, index) =>
                     <SendMenuButton key={mediaBtn[index]}><img src={i}/></SendMenuButton>
                 )
             }
@@ -75,31 +75,44 @@ const makeSendMediaButton = (mediaBtn) => {
     )
 };
 
-const InputMessageChangeHandler=(e)=>{
-    set
-}
 
-const fieldSetBtnHandler = () =>{ // 텍스트가 들어있으면 버튼이 활성화 핸들러
+const MyTextInput = ({chatList, setChatList, nickname, ...props}) => {
+    const [inputMessage, setInputMessage] = useState("");
 
-};
-
-function MyTextInput({chatList,...props}) {
-    const [inputMessage,setInputMessage] = useState("");
-
-    const InputMessageChangeHandler=(e)=>{
-        setInputMessage(e.target.value)
+    const InputMessageChangeHandler = (e) => {
+        e.preventDefault();
+        inputMessage.length > 30 || setInputMessage(e.target.value); // 30글자 제한해야함.
+        //console.log(inputMessage)
     }
 
-    const fieldSetButtonHandler = () =>{ // 텍스트가 들어있으면 버튼이 활성화 핸들러
-        
+    const fieldSetButtonHandler = (e) => { // 텍스트가 들어있으면 버튼이 활성화 핸들러
+        e.preventDefault();
+        let time = new Date();
+        if (!chatList.length || time - chatList[chatList.length - 1].chatTime > 3000) {
+            // console.log("input list add new object");
+            setChatList([...chatList, {
+                nickname: nickname,
+                textList: [inputMessage],
+                chatTime: time
+            }]);
+        } else {
+            // console.log("텍스트 이어 붙여 넣기");
+            let tmp = [...chatList];
+            tmp[tmp.length - 1].textList.push(inputMessage);
+            tmp.chatTime = time;
+            setChatList(tmp);
+            console.log(chatList.chatTime);
+        }
+        setInputMessage("");
     };
 
     return (
         <SendChat className="sendChat">
-            <form className="sendForm"  name="chat"  onSubmit={fieldSetBtnHandler}>
+            <form className="sendForm" name="chat">
                 <FieldSet className="fieldSet">
                     <FieldInput value={inputMessage} onChange={InputMessageChangeHandler} className="fieldInput"/>
-                    <FieldSetBtn onClick={fieldSetButtonHandler} type='submit' className="fieldSetBtn">전송</FieldSetBtn>
+                    <FieldSetBtn disabled={!inputMessage} onClick={fieldSetButtonHandler} type='submit'
+                                 className="fieldSetBtn">전송</FieldSetBtn>
                 </FieldSet>
                 <div>
                     {makeSendMediaButton(sendMediaButtonList)}

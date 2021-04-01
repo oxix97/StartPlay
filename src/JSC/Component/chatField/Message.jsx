@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useEffect,useRef,useState} from 'react';
 import styled, {css} from 'styled-components'
 
 const MessageContainer = styled.div`
@@ -9,17 +9,18 @@ const MessageContainer = styled.div`
   height:${props => props.height};
 `;
 const Time = styled.div`
-  padding-left:${props => props.who === "me" || "20px"};
-  padding-right:${props => props.who === "me" || "20px"};
-  margin-left:${props => props.me ? "0px" : "20px"};
-  margin-right:${props => props.me ? "0px" : "20px"};
+  color:black;
+  display:flex;
+  justify-content:${props => props.who === "me" ? "flex-start" : "flex-end"};
+  margin-left:${props => props.me ? "0px" : "10px"};
+  margin-right:${props => props.me ? "0px" : "10px"};
 `;
 
 const Messages = styled.div`
   display:flex;
   flex-direction: column;
   align-self:${props => props.who !== 'me' ? "flex-start" : "flex-end"};
-  color:${props=> props.who === 'me' && "white"};
+  color:${props => props.who === 'me' && "white"};
   margin:10px 40px 10px 40px;
   ${(props) =>
     props.who === "another" &&
@@ -48,12 +49,13 @@ const Messages = styled.div`
         width:0;
         align-self: flex-end;
         position:relative;
-        top: 45px;
+        top: 30px;
       }
     `}
 
 `;
 const NickName = styled.div`
+    color:black;
     font-size: large; /*폰트 크기 조정 */
     padding-left:10px; /* 닉네임에 크기 조절 */
 `;
@@ -67,16 +69,18 @@ const Message = styled.span`
 `;
 
 
-function App({chat, who}) {
-    const date = new Date(chat.chatTime).toString().slice(4, 25);
+function App({chatObject, who}) {
+
     return (
-        <MessageContainer who={who}>
-            <Messages className="text" who={who}>
-                <NickName className="nickName">{chat.nickname}</NickName>
-                {chat.chatList.map((i, index) => <Message who={who} key={(chat + index)}>{i}</Message>)}
-                <Time>{date}</Time>
-            </Messages>
-        </MessageContainer>
+        <>
+            <MessageContainer who={who}>
+                <Messages className="text" who={who}>
+                    {who==="me" || <NickName className="nickName">{chat.nickname}</NickName>}
+                    {chatObject.textList.map((i, index) => <Message who={who} key={(chat + index)}>{i}</Message>)}
+                    <Time>{chatObject.chatTime.toString().slice(4, 25)}</Time>
+                </Messages>
+            </MessageContainer>
+        </>
     );
 }
 
