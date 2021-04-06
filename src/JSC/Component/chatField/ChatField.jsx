@@ -1,8 +1,9 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import styled from 'styled-components'
 import Message from './Message'
 import MyTextInput from "./MyTextInput";
 import Nav from "./Nav";
+import {UserContext} from "../App";
 
 const TextField = styled.div`
   display:flex;
@@ -22,6 +23,9 @@ const TextField = styled.div`
 `;
 
 const Chat = styled.div`
+    display:flex;
+    flex-direction: column;
+
     height:${props => props.width || 600}px;
     width:${props => props.width || 600}px;
     border-radius: 10%;
@@ -29,8 +33,8 @@ const Chat = styled.div`
 
 
 function ChatField({backgroundColor, height, width, ...props}) {
-    const myNickName = "JangSeokChan";
-    const [usersName, setUsersName] = useState([]);
+    const {user, isAuthenticated, dispatch} = useContext(UserContext);
+    const myNickName = user;
     const [chatList, setChatList] = useState([]);
     const scrollRef = useRef(null);
 
@@ -40,6 +44,7 @@ function ChatField({backgroundColor, height, width, ...props}) {
     };
 
     useEffect(() => {
+        console.log(chatList);
         scrollToBottom();
     }, [chatList]);
 
@@ -49,7 +54,7 @@ function ChatField({backgroundColor, height, width, ...props}) {
             <TextField className="textField" ref={scrollRef}>
                 {chatList.map((i, index) => <Message key={"chat" + index}
                                                      who={i.nickname === myNickName ? "me" : "another"}
-                                                     chatObject={i} chatList={chatList}/> )}
+                                                     chatObject={i} chatList={chatList}/>)}
             </TextField>
             <MyTextInput nickname={myNickName} chatList={chatList} setChatList={setChatList}/>
         </Chat>

@@ -1,8 +1,9 @@
 import ChatField from './chatField/ChatField'
-import React from "react";
+import React, {createContext, useMemo, useReducer} from "react";
 import styled, {createGlobalStyle} from "styled-components";
 import reset from "styled-reset";
 import thunderstorm from "../image/thunderstorm.jpg";
+import LoginPage from "./userLogin/LoginPage";
 
 const GlobalStyles = createGlobalStyle`
      ${reset};
@@ -21,25 +22,69 @@ const GlobalStyles = createGlobalStyle`
       //overflow:hidden;
      }
  `;
-const Chat = styled.div`
 
-`;
 const Main = styled.div`
   width:100%;
   height:100%;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
 `;
 
+const Chat = styled(ChatField)`
+  display:flex;
+  justify-items: flex-end;
+`;
+
+const initialState = {
+    user: "",
+    isAuthenticated: false,
+    modalPopup:false,
+};
+const testDB = [{id: "jsc", password: "1234", nickname: "eclipse"}];
+
+const reducer = (state, action) => {
+    switch (action.type) {
+        case "LOGIN":
+            const res = testDB.filter((i)=>i.id===action.id && i.password===action.password);
+            if (res.length > 0){
+                return {
+                    ...state,
+                    user: res[0].nickname,
+                    isAuthenticated: true
+                }
+            }
+            else{
+                return{
+                    ...state
+                }
+            }
+        default:
+            return state;
+    }
+};
+export const UserContext = createContext({
+    // user: "",
+    // isAuthenticated: false,
+    // dispatch: () => {
+    // }
+});
+
 function App() {
+    const [state, dispatch] = useReducer(reducer, initialState);
+    const {user, isAuthenticated} = state;
+    const value = useMemo(() => ({user, isAuthenticated, dispatch}), [user,isAuthenticated]);
     return (
         <>
             <GlobalStyles image={thunderstorm}/>
             <Main>
-                <ChatField/>
+                <UserContext.Provider value={value}>
+                    {!isAuthenticated && <LoginPage/>}
+                    {isAuthenticated && <Chat/>}
+                </UserContext.Provider>
             </Main>
         </>
-    );
+    )
+        ;
 }
 
 export default App;

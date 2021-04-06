@@ -32,7 +32,7 @@ const Messages = styled.div`
         border-bottom: 0 solid transparent;
         content:"";
         position:relative;
-        bottom:-45px;
+        top:30px;
         width:0;
       }
     `}
