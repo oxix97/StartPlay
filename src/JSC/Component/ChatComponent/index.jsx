@@ -3,7 +3,9 @@ import styled from 'styled-components'
 import Message from './Message'
 import MyTextInput from "./MyTextInput";
 import Nav from "./Nav";
-import {UserContext} from "../App";
+import {UserContext} from "../../store";
+// import SimplePeer from 'simple-peer'
+// import io from 'socket'
 
 const TextField = styled.div`
   display:flex;
@@ -25,14 +27,38 @@ const TextField = styled.div`
 const Chat = styled.div`
     display:flex;
     flex-direction: column;
-
     height:${props => props.width || 600}px;
     width:${props => props.width || 600}px;
     border-radius: 10%;
 `;
 
 
-function ChatField({backgroundColor, height, width, ...props}) {
+// const p = new SimplePeer({
+//     initiator: location.hash === '#1',
+//     trickle: false
+// });
+//
+// p.on('error', err => console.log('error', err));
+//
+// p.on('signal', data => {
+//     console.log('SIGNAL', JSON.stringify(data));
+//     document.querySelector('#outgoing').textContent = JSON.stringify(data)
+// });
+//
+// document.querySelector('form').addEventListener('submit', ev => {
+//     ev.preventDefault();
+//     p.signal(JSON.parse(document.querySelector('#incoming').value))
+// });
+//
+// p.on('connect', () => {
+//     p.send('whatever' + Math.random());
+// });
+//
+// p.on('data', data => {
+//     console.log('data: ' + data)
+// });
+
+function Index({backgroundColor, height, width, ...props}) {
     const {user, isAuthenticated, dispatch} = useContext(UserContext);
     const myNickName = user;
     const [chatList, setChatList] = useState([]);
@@ -61,4 +87,4 @@ function ChatField({backgroundColor, height, width, ...props}) {
     );
 }
 
-export default ChatField;
+export default Index;

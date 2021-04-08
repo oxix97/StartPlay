@@ -88,7 +88,7 @@ const MyTextInput = ({chatList, setChatList, nickname, ...props}) => {
     const fieldSetButtonHandler = (e) => { // 텍스트가 들어있으면 버튼이 활성화 핸들러
         e.preventDefault();
         let time = new Date();
-        if (!chatList.length || time - chatList[chatList.length - 1].chatTime > 3000) {
+        if (!chatList.length || time - chatList[chatList.length - 1].chatTime > 60000) {
             // console.log("input list add new object");
             setChatList([...chatList, {
                 nickname: nickname,

@@ -1,16 +1,18 @@
 import React, {useContext, useState} from 'react'
 import styled from 'styled-components'
-import {UserContext} from '../App'
+import {UserContext} from '../store'
+import {LOGIN} from '../Constants/actionTypes'
 
 const UserInformationInput = styled.input`
     display:flex;
     height:40px;
 `;
 
-const LoginPage = () => {
+const LoginPageContainer = () => {
     const [id, setId] = useState("");
     const [password, setPassword] = useState("");
-    const {dispatch} = useContext(UserContext);
+    const {user, isAuthenticated, dispatch} = useContext(UserContext);
+    console.log("(debug store.js) : ", user, isAuthenticated);
 
     const onChangeIdHandler = (e) => {
         setId(e.target.value)
@@ -19,18 +21,20 @@ const LoginPage = () => {
         setPassword(e.target.value)
     };
     const onClickSendButtonHandler = () => {
-        dispatch({type:"LOGIN",id,password});
+        dispatch({type: LOGIN, id, password});
+        console.log("(debug store.js) : ", "dispatch LOGIN");
     };
 
     return (
         <>
             <div>
                 <UserInformationInput value={id} onChange={onChangeIdHandler} placeholder="id"/>
-                <UserInformationInput  type="password" value={password} onChange={onChangePasswordHandler} placeholder="password"/>
+                <UserInformationInput type="password" value={password} onChange={onChangePasswordHandler}
+                                      placeholder="password"/>
                 <button onClick={onClickSendButtonHandler}/>
             </div>
         </>
     )
 };
 
-export default LoginPage;
+export default LoginPageContainer;
