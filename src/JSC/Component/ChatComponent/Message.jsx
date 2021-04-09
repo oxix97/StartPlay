@@ -1,4 +1,4 @@
-import React,{useEffect,useRef,useState} from 'react';
+import React,{useEffect,useRef,useState,memo} from 'react';
 import styled, {css} from 'styled-components'
 
 const MessageContainer = styled.div`
@@ -84,4 +84,4 @@ function App({chatObject, who}) {
     );
 }
 
-export default App;
+export default memo(App);

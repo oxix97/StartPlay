@@ -1,10 +1,12 @@
 import ChatComponent from '../Component/ChatComponent'
-import React, {useContext} from "react";
+import React, {useContext, useState} from "react";
 import styled, {createGlobalStyle} from "styled-components";
 import reset from "styled-reset";
 import thunderstorm from "../image/thunderstorm.jpg";
 import LoginPageContainer from "./LoginPageContainer";
 import {UserContext} from "../store";
+import { Route } from 'react-router-dom';
+import io from "socket.io-client";
 
 const GlobalStyles = createGlobalStyle`
      ${reset};
@@ -38,13 +40,19 @@ const Chat = styled(ChatComponent)`
 
 
 function ChatContainer() {
+    const [currentSocket, setCurrentSocket] = useState(io("localhost:4000",{ transports: ['websocket'] }));
+
     const {user, isAuthenticated, dispatch} = useContext(UserContext);
     return (
         <>
             <GlobalStyles image={thunderstorm}/>
             <Main>
-                {!isAuthenticated && <LoginPageContainer/>}
-                {isAuthenticated && <Chat/>}
+                <Route exact path="/" component={LoginPageContainer}/>
+                <Route exact path="/chat">
+                    <Chat currentSocket={currentSocket}/>
+                </Route>
+                {/*{!isAuthenticated && <LoginPageContainer/>}*/}
+                {/*{isAuthenticated && <Chat/>}*/}
             </Main>
         </>
     )

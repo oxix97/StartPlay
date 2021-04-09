@@ -1,13 +1,15 @@
 import React, {createContext, useMemo, useReducer} from "react";
-import App from './Container'
-import {LOGIN} from './Constants/actionTypes'
+import App from './Container';
+import {LOGIN} from './Constants/actionTypes';
+
 
 const initialState = {
     user: "",
     isAuthenticated: false,
+    getDateFromPeer: []
     // modalPopup:false,
 };
-const testDB = [{id: "jsc", password: "1234", nickname: "eclipse"}];
+const testDB = [{id: "jsc", password: "1234", nickname: "eclipse"}, {id: "jj", password: "1234", nickname: "jjjj"}];
 
 const reducer = (state, action) => {
     switch (action.type) {
@@ -21,9 +23,38 @@ const reducer = (state, action) => {
                 }
             } else {
                 return {
-                    ...state
-                }
+                    ...state,
+                    user: "Guest"
+                };
             }
+        // case CONNECT_PEER:
+        //     let isFirstSignal = true;
+        //     const newPeer = new Peer({
+        //         initiator: state.nickname !== "Guest", // 닉네임이  Guest가 아닐때 true
+        //         trickle: false,
+        //     });
+        //     newPeer.on('error', err => console.log('peer error : ', err));
+        //     newPeer.on('signal', data => {
+        //         if (isFirstSignal) {
+        //             socket.emit(
+        //                 'joinCustomer',
+        //                 { nickname: state.nickname, mode: 'text', signal: data },
+        //                 (serverMsg) => {
+        //                     message = serverMsg;
+        //                     console.log(message);
+        //                     isFirstSignal = false;
+        //                 })
+        //         }
+        //     });
+        //     return {...state};
+        // case SEND_MESSAGE:
+        //     socket.emit('send message',state.nickname, action.text); // 전송버튼 누를때
+        //
+        //     socket.on('receive message',(msg)=>{
+        //
+        //     })
+        //
+        //     return {...state};
         // case "SIMPLE_PEER":
         //     console.log("debug - SIMPLE_PEER");
         //     const p = new Peer({
@@ -70,7 +101,12 @@ export const UserContext = createContext({
 function store() {
     const [state, dispatch] = useReducer(reducer, initialState);
     const {user, isAuthenticated} = state;
-    const value = useMemo(() => ({user, isAuthenticated, dispatch}), [user, isAuthenticated]);
+    const value = useMemo(() => ({
+        user: user,
+        isAuthenticated: isAuthenticated,
+        dispatch: dispatch
+    }), [user, isAuthenticated]);
+    // dispatch는 실행중 변경하지 않기에 useMemo를 통해 제함.
     return (
         <UserContext.Provider value={value}>
             <App/>

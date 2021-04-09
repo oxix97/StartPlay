@@ -1,9 +1,6 @@
-import React, {useState} from 'react';
+import React, {useState,memo} from 'react';
 import styled from "styled-components";
-import emoticon from "../../icon/emoticon.svg";
-import paperclip from "../../icon/paperclip.svg";
 import voicetalk from "../../icon/voicetalk.svg";
-
 
 const Img = styled.img`
   
@@ -62,7 +59,7 @@ const SendMenuButton = styled.button`
 `;
 
 
-const sendMediaButtonList = [emoticon, paperclip, voicetalk];
+const sendMediaButtonList = [voicetalk];
 const makeSendMediaButton = (mediaBtn) => {
     return (
         <SendMenuButtons className="sendMenuBtn">
@@ -76,33 +73,37 @@ const makeSendMediaButton = (mediaBtn) => {
 };
 
 
-const MyTextInput = ({chatList, setChatList, nickname, ...props}) => {
+const MyTextInput = ({chatList, setChatList, nickname, currentSocket, ...props}) => {
     const [inputMessage, setInputMessage] = useState("");
+
+    const socketHandler = (msg) => {
+        console.log("[debug] MyTextInput : send message : ", msg);
+        currentSocket.emit('send message', nickname, msg);
+    };
 
     const InputMessageChangeHandler = (e) => {
         e.preventDefault();
         inputMessage.length > 30 || setInputMessage(e.target.value); // 30글자 제한해야함.
         //console.log(inputMessage)
-    }
+    };
 
     const fieldSetButtonHandler = (e) => { // 텍스트가 들어있으면 버튼이 활성화 핸들러
         e.preventDefault();
         let time = new Date();
-        if (!chatList.length || time - chatList[chatList.length - 1].chatTime > 60000) {
-            // console.log("input list add new object");
+        if (!chatList.length || time - chatList[chatList.length - 1].chatTime > 3000) {
             setChatList([...chatList, {
                 nickname: nickname,
                 textList: [inputMessage],
                 chatTime: time
             }]);
         } else {
-            // console.log("텍스트 이어 붙여 넣기");
             let tmp = [...chatList];
             tmp[tmp.length - 1].textList.push(inputMessage);
             tmp.chatTime = time;
             setChatList(tmp);
             console.log(chatList.chatTime);
         }
+        socketHandler(inputMessage);
         setInputMessage("");
     };
 
@@ -122,4 +123,4 @@ const MyTextInput = ({chatList, setChatList, nickname, ...props}) => {
     );
 }
 
-export default MyTextInput;
+export default memo(MyTextInput);

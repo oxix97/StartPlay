@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState,memo} from 'react';
 import styled from 'styled-components'
 import Message from './Message'
 import MyTextInput from "./MyTextInput";
@@ -32,7 +32,7 @@ const Chat = styled.div`
     border-radius: 10%;
 `;
 
-
+// 심플피어 예제코드 나중에 가져다 쓸 부분은 선언부랑 p.on('signal',data=>()) 이부분인듯?
 // const p = new SimplePeer({
 //     initiator: location.hash === '#1',
 //     trickle: false
@@ -57,17 +57,43 @@ const Chat = styled.div`
 // p.on('data', data => {
 //     console.log('data: ' + data)
 // });
+// const socket = io("localhost:3300");
+// const sendMessage = (msg) => {
+//     socket.emit('send message', msg)
+// };
+// const receiveMessage = () => {
+//
+// }
 
-function Index({backgroundColor, height, width, ...props}) {
+
+function Index({backgroundColor, height, width, currentSocket, ...props}) {
     const {user, isAuthenticated, dispatch} = useContext(UserContext);
     const myNickName = user;
+    console.log("[debug] : ", user, isAuthenticated);
     const [chatList, setChatList] = useState([]);
-    const scrollRef = useRef(null);
 
+    const scrollRef = useRef(null);
     const scrollToBottom = () => {
         const {scrollHeight, clientHeight} = scrollRef.current;
         scrollRef.current.scrollTop = scrollHeight - clientHeight;
     };
+    currentSocket.on('receive message', (nickname, msg) => {
+        console.log("[debug] ChatComponent : socket.on : ", nickname, msg)
+        let time = new Date();
+        if (!chatList.length || time - chatList[chatList.length - 1].chatTime > 60000) {
+            setChatList([...chatList, {
+                nickname: nickname,
+                textList: [msg],
+                chatTime: time
+            }]);
+        } else {
+            let tmp = [...chatList];
+            tmp[tmp.length - 1].textList.push();
+            tmp.chatTime = time;
+            setChatList(tmp);
+            console.log(chatList.chatTime);
+        }
+    });
 
     useEffect(() => {
         console.log(chatList);
@@ -82,9 +108,10 @@ function Index({backgroundColor, height, width, ...props}) {
                                                      who={i.nickname === myNickName ? "me" : "another"}
                                                      chatObject={i} chatList={chatList}/>)}
             </TextField>
-            <MyTextInput nickname={myNickName} chatList={chatList} setChatList={setChatList}/>
+            <MyTextInput nickname={myNickName} chatList={chatList} setChatList={setChatList}
+                         currentSocket={currentSocket}/>
         </Chat>
     );
 }
 
-export default Index;
+export default memo(Index);
