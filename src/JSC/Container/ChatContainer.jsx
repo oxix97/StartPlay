@@ -1,5 +1,5 @@
 import ChatComponent from '../Component/ChatComponent'
-import React, {useContext, useState} from "react";
+import React, {useContext, useState,memo} from "react";
 import styled, {createGlobalStyle} from "styled-components";
 import reset from "styled-reset";
 import thunderstorm from "../image/thunderstorm.jpg";
@@ -33,14 +33,14 @@ const Main = styled.div`
   justify-content: space-between;
 `;
 
-const Chat = styled(ChatComponent)`
+const ChatComponentWithStyled = styled(ChatComponent)`
   display:flex;
   justify-items: flex-end;
 `;
 
 
 function ChatContainer() {
-    const [currentSocket, setCurrentSocket] = useState(io("localhost:4000",{ transports: ['websocket'] }));
+    console.log("debug ChatContainer rerender");
 
     const {user, isAuthenticated, dispatch} = useContext(UserContext);
     return (
@@ -49,7 +49,7 @@ function ChatContainer() {
             <Main>
                 <Route exact path="/" component={LoginPageContainer}/>
                 <Route exact path="/chat">
-                    <Chat currentSocket={currentSocket}/>
+                    <ChatComponentWithStyled/>
                 </Route>
                 {/*{!isAuthenticated && <LoginPageContainer/>}*/}
                 {/*{isAuthenticated && <Chat/>}*/}
@@ -59,4 +59,4 @@ function ChatContainer() {
         ;
 }
 
-export default ChatContainer;
+export default memo(ChatContainer);

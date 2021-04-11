@@ -1,6 +1,7 @@
 import React, {createContext, useMemo, useReducer} from "react";
 import App from './Container';
 import {LOGIN} from './Constants/actionTypes';
+import {testDB} from "./Common/testDB";
 
 
 const initialState = {
@@ -9,7 +10,7 @@ const initialState = {
     getDateFromPeer: []
     // modalPopup:false,
 };
-const testDB = [{id: "jsc", password: "1234", nickname: "eclipse"}, {id: "jj", password: "1234", nickname: "jjjj"}];
+//const testDB = [{id: "jsc", password: "1234", nickname: "eclipse"}, {id: "jj", password: "1234", nickname: "jjjj"}];
 
 const reducer = (state, action) => {
     switch (action.type) {

@@ -1,9 +1,12 @@
-import React, {useContext, useEffect, useRef, useState,memo} from 'react';
+import React, {memo, useContext, useEffect, useRef, useState} from 'react';
 import styled from 'styled-components'
 import Message from './Message'
 import MyTextInput from "./MyTextInput";
 import Nav from "./Nav";
 import {UserContext} from "../../store";
+import io from "socket.io-client";
+import {chatAddMessage} from "../../Common/chat"
+
 // import SimplePeer from 'simple-peer'
 // import io from 'socket'
 
@@ -64,10 +67,11 @@ const Chat = styled.div`
 // const receiveMessage = () => {
 //
 // }
+const currentSocket = io("krkorea.iptime.org:1235", {transports: ['websocket']});
 
-
-function Index({backgroundColor, height, width, currentSocket, ...props}) {
+function Index({backgroundColor, height, width, ...props}) {
     const {user, isAuthenticated, dispatch} = useContext(UserContext);
+    //const currentSocket = useRef(io("krkorea.iptime.org:1235", {transports: ['websocket']}));
     const myNickName = user;
     console.log("[debug] : ", user, isAuthenticated);
     const [chatList, setChatList] = useState([]);
@@ -77,23 +81,13 @@ function Index({backgroundColor, height, width, currentSocket, ...props}) {
         const {scrollHeight, clientHeight} = scrollRef.current;
         scrollRef.current.scrollTop = scrollHeight - clientHeight;
     };
-    currentSocket.on('receive message', (nickname, msg) => {
-        console.log("[debug] ChatComponent : socket.on : ", nickname, msg)
-        let time = new Date();
-        if (!chatList.length || time - chatList[chatList.length - 1].chatTime > 60000) {
-            setChatList([...chatList, {
-                nickname: nickname,
-                textList: [msg],
-                chatTime: time
-            }]);
-        } else {
-            let tmp = [...chatList];
-            tmp[tmp.length - 1].textList.push();
-            tmp.chatTime = time;
-            setChatList(tmp);
-            console.log(chatList.chatTime);
-        }
-    });
+    useEffect(() => {
+        currentSocket.on('receive message', (nickname, msg) => {
+            console.log("[debug] ChatComponent : socket.on : ", nickname, msg);
+            chatAddMessage({nickname,inputMessage:msg , chatList, setChatList});
+        });
+        return () => (currentSocket.off('receive message'));
+    }, [chatList]);
 
     useEffect(() => {
         console.log(chatList);

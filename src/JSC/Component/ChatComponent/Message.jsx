@@ -32,7 +32,7 @@ const Messages = styled.div`
         border-bottom: 0 solid transparent;
         content:"";
         position:relative;
-        top:30px;
+        top:45px;
         width:0;
       }
     `}
@@ -70,13 +70,12 @@ const Message = styled.span`
 
 
 function App({chatObject, who}) {
-
     return (
         <>
             <MessageContainer who={who}>
                 <Messages className="text" who={who}>
-                    {who==="me" || <NickName className="nickName">{chat.nickname}</NickName>}
-                    {chatObject.textList.map((i, index) => <Message who={who} key={(chat + index)}>{i}</Message>)}
+                    {who==="me" || <NickName className="nickName">{chatObject.nickname}</NickName>}
+                    {chatObject.textList.map((i, index) => <Message who={who} key={(chatObject + index)}>{i}</Message>)}
                     <Time>{chatObject.chatTime.toString().slice(4, 25)}</Time>
                 </Messages>
             </MessageContainer>

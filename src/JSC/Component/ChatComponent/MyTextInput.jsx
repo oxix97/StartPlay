@@ -1,6 +1,7 @@
 import React, {useState,memo} from 'react';
 import styled from "styled-components";
 import voicetalk from "../../icon/voicetalk.svg";
+import {chatAddMessage} from "../../Common/chat"
 
 const Img = styled.img`
   
@@ -89,20 +90,21 @@ const MyTextInput = ({chatList, setChatList, nickname, currentSocket, ...props})
 
     const fieldSetButtonHandler = (e) => { // 텍스트가 들어있으면 버튼이 활성화 핸들러
         e.preventDefault();
-        let time = new Date();
-        if (!chatList.length || time - chatList[chatList.length - 1].chatTime > 3000) {
-            setChatList([...chatList, {
-                nickname: nickname,
-                textList: [inputMessage],
-                chatTime: time
-            }]);
-        } else {
-            let tmp = [...chatList];
-            tmp[tmp.length - 1].textList.push(inputMessage);
-            tmp.chatTime = time;
-            setChatList(tmp);
-            console.log(chatList.chatTime);
-        }
+        chatAddMessage({nickname,inputMessage,chatList,setChatList})
+        // let time = new Date();
+        // if (!chatList.length || nickname !== chatList[chatList.length - 1].nickname || time - chatList[chatList.length - 1].chatTime > 3000) {
+        //     setChatList([...chatList, {
+        //         nickname: nickname,
+        //         textList: [inputMessage],
+        //         chatTime: time
+        //     }]);
+        // } else {
+        //     let tmp = [...chatList];
+        //     tmp[tmp.length - 1].textList.push(inputMessage);
+        //     tmp.chatTime = time;
+        //     setChatList(tmp);
+        //     console.log(chatList.chatTime);
+        // }
         socketHandler(inputMessage);
         setInputMessage("");
     };
