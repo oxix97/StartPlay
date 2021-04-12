@@ -6,6 +6,7 @@ import Nav from "./Nav";
 import {UserContext} from "../../store";
 import io from "socket.io-client";
 import {chatAddMessage} from "../../Common/chat"
+import {RECEIVE_MESSAGE, socketApi} from "../../Common/socketApi";
 
 // import SimplePeer from 'simple-peer'
 // import io from 'socket'
@@ -82,11 +83,8 @@ function Index({backgroundColor, height, width, ...props}) {
         scrollRef.current.scrollTop = scrollHeight - clientHeight;
     };
     useEffect(() => {
-        currentSocket.on('receive message', (nickname, msg) => {
-            console.log("[debug] ChatComponent : socket.on : ", nickname, msg);
-            chatAddMessage({nickname,inputMessage:msg , chatList, setChatList});
-        });
-        return () => (currentSocket.off('receive message'));
+        socketApi(RECEIVE_MESSAGE, {currentSocket, chatList, setChatList}, chatAddMessage);
+        return () => socketApi(RECEIVE_MESSAGE, {currentSocket, socketOnOff: false});
     }, [chatList]);
 
     useEffect(() => {
