@@ -6,6 +6,7 @@ import thunderstorm from "../image/thunderstorm.jpg";
 import LoginPageContainer from "./LoginPageContainer";
 import {UserContext} from "../store";
 import { Route } from 'react-router-dom';
+import TestComponent from './../Component/TestComponent;'
 import io from "socket.io-client";
 
 const GlobalStyles = createGlobalStyle`
@@ -53,6 +54,7 @@ function ChatContainer() {
                 </Route>
                 {/*{!isAuthenticated && <LoginPageContainer/>}*/}
                 {/*{isAuthenticated && <Chat/>}*/}
+                <Route exact path="/test" component={TestComponent}/>
             </Main>
         </>
     )
