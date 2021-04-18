@@ -33,6 +33,8 @@ io.on('connection', socket => {// connection 연결 부분
     });
 
     socket.on("sending signal", payload => { // sending signal 이라는 신호를 받았을 때.
+        // 조인룸 후 룸에 들어간 user id를 가져와서 sending signal에 보내는데 해당 피어의 정보(peer) 까지 보냄.
+        // 이 정보를 서버에서 받아 해당
         io.to(payload.userToSignal).emit('user joined', { signal: payload.signal, callerID: payload.callerID });
         // 소켓은 payload를 받고 payload.userToSignal 값(상대 peer 들의 socket id값)으로 데이터를 보낸다.
         // 값 보낼 때
