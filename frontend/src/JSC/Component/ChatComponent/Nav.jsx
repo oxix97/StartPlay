@@ -41,7 +41,7 @@ function Nav() {
     return (
         <div>
             <Navbar id="nav" className="nav">
-                <Users></Users>
+                <Users/>
                 <WindowIcons>{windowIcons.map((i) => <Window key={i.iconName + "-Nav"} icon={i}/>)}</WindowIcons>
             </Navbar>
         </div>

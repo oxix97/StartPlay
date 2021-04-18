@@ -75,7 +75,7 @@ const makeSendMediaButton = (mediaBtn) => {
 };
 
 
-const MyTextInput = ({chatList, setChatList, nickname, currentSocket, ...props}) => {
+const MyTextInput = ({chatList, setChatList, nickname, socketRef, ...props}) => {
     const [inputMessage, setInputMessage] = useState("");
 
 
@@ -88,7 +88,7 @@ const MyTextInput = ({chatList, setChatList, nickname, currentSocket, ...props})
     const fieldSetButtonHandler = (e) => { // 텍스트가 들어있으면 버튼이 활성화 핸들러
         e.preventDefault();
         chatAddMessage({nickname, inputMessage, chatList, setChatList});
-        socketApi(SEND_MESSAGE, {currentSocket, nickname, message:inputMessage});
+        socketApi(SEND_MESSAGE, {socketRef, nickname, message:inputMessage});
         setInputMessage("");
     };
 

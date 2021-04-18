@@ -1,13 +1,8 @@
 import ChatComponent from '../Component/ChatComponent'
-import React, {useContext, useState,memo} from "react";
+import React, {memo} from "react";
 import styled, {createGlobalStyle} from "styled-components";
 import reset from "styled-reset";
 import thunderstorm from "../image/thunderstorm.jpg";
-import LoginPageContainer from "./LoginPageContainer";
-import {UserContext} from "../store";
-import { Route } from 'react-router-dom';
-import TestComponent from './../Component/TestComponent;'
-import io from "socket.io-client";
 
 const GlobalStyles = createGlobalStyle`
      ${reset};
@@ -42,23 +37,10 @@ const ChatComponentWithStyled = styled(ChatComponent)`
 
 function ChatContainer() {
     console.log("debug ChatContainer rerender");
-
-    const {user, isAuthenticated, dispatch} = useContext(UserContext);
+    // const {user, isAuthenticated, dispatch} = useContext(UserContext);
     return (
-        <>
-            <GlobalStyles image={thunderstorm}/>
-            <Main>
-                <Route exact path="/" component={LoginPageContainer}/>
-                <Route exact path="/chat">
-                    <ChatComponentWithStyled/>
-                </Route>
-                {/*{!isAuthenticated && <LoginPageContainer/>}*/}
-                {/*{isAuthenticated && <Chat/>}*/}
-                <Route exact path="/test" component={TestComponent}/>
-            </Main>
-        </>
-    )
-        ;
+        <GlobalStyles image={thunderstorm}/>
+    );
 }
 
 export default memo(ChatContainer);
